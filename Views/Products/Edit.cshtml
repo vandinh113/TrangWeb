@@ -1,0 +1,457 @@
+﻿
+@model DBSportStore.Models.Product
+
+@{
+    ViewBag.Title = "Chỉnh sửa sản phẩm";
+    Layout = "~/Views/Shared/_StoreLayout.cshtml";
+
+    var imageName = System.IO.Path.GetFileName(
+        (Model.ImageUrl ?? "").Replace('\\', '/'));
+
+    var imagePath = string.IsNullOrWhiteSpace(imageName)
+        ? ""
+        : Url.Content("~/Content/images/" +
+            Uri.EscapeDataString(imageName));
+}
+
+<style>
+    .edit-page {
+        max-width: 850px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        font-family: Arial, sans-serif;
+    }
+
+    .edit-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+
+    .edit-subtitle {
+        color: #64748b;
+        margin-bottom: 25px;
+    }
+
+    .edit-page .form-group {
+        margin-bottom: 20px;
+    }
+
+    .edit-page .form-label {
+        display: block;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    .edit-page .form-control {
+        display: block;
+        width: 100%;
+        max-width: none;
+        height: auto;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: white;
+        box-sizing: border-box;
+        font-size: 15px;
+    }
+
+        .edit-page .form-control:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249,115,22,.12);
+        }
+
+    .edit-page .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    .edit-page .upload-box {
+        border: 2px dashed #cbd5e1;
+        padding: 20px;
+        border-radius: 10px;
+        background: #f8fafc;
+        text-align: center;
+    }
+
+    .edit-page .product-image {
+        display: block;
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        border-radius: 10px;
+        margin: 12px auto;
+        background: white;
+        border: 1px solid #e2e8f0;
+    }
+
+    .edit-page .image-preview {
+        display: none;
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        border-radius: 10px;
+        margin: 15px auto;
+        background: white;
+        border: 1px solid #e2e8f0;
+    }
+
+    .edit-page .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .edit-page .validation-error {
+        color: #dc2626;
+        font-size: 13px;
+        display: block;
+        margin-top: 5px;
+    }
+
+    .edit-page .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .edit-page .btn-save {
+        background: #f97316;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .edit-page .btn-save:hover {
+            background: #ea580c;
+        }
+
+    .edit-page .btn-back {
+        background: #e2e8f0;
+        color: #334155;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+        .edit-page .btn-back:hover {
+            background: #cbd5e1;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 600px) {
+        .edit-page {
+            margin: 15px;
+            padding: 20px;
+        }
+
+            .edit-page .form-row {
+                grid-template-columns: 1fr;
+            }
+    }
+</style>
+
+<div class="edit-page">
+
+    <h2 class="edit-title">CHỈNH SỬA SẢN PHẨM</h2>
+
+    <p class="edit-subtitle">
+        Cập nhật thông tin sản phẩm trong hệ thống SportStore.
+    </p>
+
+    @using (Html.BeginForm(
+        "Edit",
+        "Products",
+        FormMethod.Post,
+        new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.ProductID)
+
+        @Html.ValidationSummary(
+            true, "",
+            new { @class = "validation-error" })
+
+        <!-- TÊN SẢN PHẨM -->
+        <div class="form-group">
+
+            @Html.LabelFor(
+                m => m.ProductName,
+                "Tên sản phẩm",
+                new { @class = "form-label" })
+
+            @Html.TextBoxFor(
+                m => m.ProductName,
+                new
+                     {
+                    @class = "form-control",
+                    required = "required"
+                })
+
+            @Html.ValidationMessageFor(
+                m => m.ProductName, "",
+                new { @class = "validation-error" })
+
+        </div>
+
+        <!-- MÔ TẢ -->
+        <div class="form-group">
+
+            @Html.LabelFor(
+                m => m.Description,
+                "Mô tả sản phẩm",
+                new { @class = "form-label" })
+
+            @Html.TextAreaFor(
+                m => m.Description,
+                new
+                     {
+                    @class = "form-control",
+                    rows = 4
+                })
+
+            @Html.ValidationMessageFor(
+                m => m.Description, "",
+                new { @class = "validation-error" })
+
+        </div>
+
+        <!-- DANH MỤC -->
+        <div class="form-group">
+
+            @Html.LabelFor(
+                m => m.CategoryID,
+                "Danh mục sản phẩm",
+                new { @class = "form-label" })
+
+            @Html.DropDownList(
+                "CategoryID",
+                null,
+                "-- Chọn danh mục --",
+                new
+                     {
+                    @class = "form-control",
+                    required = "required"
+                })
+
+            @Html.ValidationMessageFor(
+                m => m.CategoryID, "",
+                new { @class = "validation-error" })
+
+        </div>
+
+        <!-- GIÁ VÀ TỒN KHO -->
+        <div class="form-row">
+
+            <div class="form-group">
+
+                @Html.LabelFor(
+                    m => m.Price,
+                    "Giá sản phẩm (VNĐ)",
+                    new { @class = "form-label" })
+
+                @Html.TextBoxFor(
+                    m => m.Price,
+                    new
+                         {
+                        @class = "form-control",
+                        type = "number",
+                        min = "0",
+                        step = "0.01",
+                        required = "required"
+                    })
+
+                @Html.ValidationMessageFor(
+                    m => m.Price, "",
+                    new { @class = "validation-error" })
+
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(
+                    m => m.StockQuantity,
+                    "Số lượng tồn kho",
+                    new { @class = "form-label" })
+
+                @Html.TextBoxFor(
+                    m => m.StockQuantity,
+                    new
+                         {
+                        @class = "form-control",
+                        type = "number",
+                        min = "0",
+                        step = "1",
+                        required = "required"
+                    })
+
+                @Html.ValidationMessageFor(
+                    m => m.StockQuantity, "",
+                    new { @class = "validation-error" })
+
+            </div>
+
+        </div>
+
+        <!-- HÌNH ẢNH HIỆN TẠI -->
+        <div class="form-group">
+
+            <label class="form-label">
+                Hình ảnh hiện tại
+            </label>
+
+            <div class="upload-box">
+
+                @if (!string.IsNullOrEmpty(imagePath))
+                {
+                    <img src="@imagePath"
+                         alt="@Model.ProductName"
+                         class="product-image" />
+                }
+                else
+                {
+                    <p>Chưa có hình ảnh sản phẩm.</p>
+                }
+
+                <small style="color:#64748b;">
+                    @Model.ImageUrl
+                </small>
+
+            </div>
+
+        </div>
+
+        <!-- CHỌN ẢNH MỚI -->
+        <div class="form-group">
+
+            <label class="form-label">
+                Thay đổi hình ảnh sản phẩm
+            </label>
+
+            <div class="upload-box">
+
+                <input type="file"
+                       id="ImageFile"
+                       name="ImageFile"
+                       accept=".jpg,.jpeg,.png,.webp"
+                       class="form-control" />
+
+                <img id="imagePreview"
+                     class="image-preview"
+                     alt="Xem trước ảnh mới" />
+
+                <p style="margin-top:12px;color:#64748b;font-size:13px;">
+                    JPG, JPEG, PNG, WEBP. Tối đa 5 MB.
+                </p>
+
+                <small style="color:#64748b;">
+                    Nếu không chọn ảnh mới, hệ thống sẽ giữ ảnh cũ.
+                </small>
+
+            </div>
+
+            @Html.ValidationMessage(
+                "ImageFile", "",
+                new { @class = "validation-error" })
+
+        </div>
+
+        <!-- TRẠNG THÁI -->
+        <div class="checkbox-row">
+
+            @Html.CheckBoxFor(m => m.IsActive)
+
+            <label for="IsActive">
+                Sản phẩm đang kinh doanh
+            </label>
+
+        </div>
+
+        <!-- NÚT LƯU -->
+        <div class="form-actions">
+
+            <button type="submit" class="btn-save">
+                Lưu thay đổi
+            </button>
+
+            <a href="@Url.Action("Index", "Products")"
+               class="btn-back">
+                Quay lại danh sách
+            </a>
+
+        </div>
+    }
+
+</div>
+
+<script>
+    (function () {
+        var fileInput = document.getElementById("ImageFile");
+        var preview = document.getElementById("imagePreview");
+        var currentUrl = null;
+
+        if (!fileInput || !preview) return;
+
+        fileInput.addEventListener("change", function () {
+            if (currentUrl) {
+                URL.revokeObjectURL(currentUrl);
+                currentUrl = null;
+            }
+
+            var file = fileInput.files && fileInput.files[0];
+
+            if (!file) {
+                preview.removeAttribute("src");
+                preview.style.display = "none";
+                return;
+            }
+
+            var validTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+            if (validTypes.indexOf(file.type) === -1) {
+                alert("Chỉ được chọn ảnh JPG, PNG hoặc WEBP.");
+                fileInput.value = "";
+                preview.style.display = "none";
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert("Ảnh không được vượt quá 5 MB.");
+                fileInput.value = "";
+                preview.style.display = "none";
+                return;
+            }
+
+            currentUrl = URL.createObjectURL(file);
+            preview.src = currentUrl;
+            preview.style.display = "block";
+        });
+
+        window.addEventListener("pagehide", function () {
+            if (currentUrl) {
+                URL.revokeObjectURL(currentUrl);
+            }
+        });
+    })();
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

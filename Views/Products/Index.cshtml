@@ -1,0 +1,288 @@
+﻿
+@model IEnumerable<DBSportStore.Models.Product>
+
+@{
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .products-page {
+        padding: 25px 0 50px;
+        font-family: Arial, sans-serif;
+    }
+
+    .products-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+        .products-heading h2 {
+            font-weight: bold;
+            color: #14213d;
+            margin: 0;
+        }
+
+    .add-product {
+        display: inline-block;
+        background: #2563eb;
+        color: white !important;
+        padding: 12px 20px;
+        border-radius: 8px;
+        text-decoration: none !important;
+        font-weight: bold;
+    }
+
+        .add-product:hover {
+            background: #1d4ed8;
+        }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 25px;
+    }
+
+    .product-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        transition: transform 0.2s;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .product-image {
+        width: 100%;
+        height: 220px;
+        object-fit: contain;
+        background: #f1f5f9;
+        padding: 12px;
+    }
+
+    .product-info {
+        padding: 18px;
+    }
+
+    .product-category {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+
+    .product-name {
+        font-size: 19px;
+        font-weight: bold;
+        color: #0f172a;
+        min-height: 45px;
+        margin: 0 0 10px;
+    }
+
+    .product-description {
+        color: #64748b;
+        font-size: 14px;
+        min-height: 45px;
+        line-height: 1.5;
+    }
+
+    .product-price {
+        color: #dc2626;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 12px 0;
+    }
+
+    .product-stock {
+        color: #475569;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .product-status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .product-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        .product-actions a {
+            flex: 1;
+            text-align: center;
+            padding: 9px 5px;
+            border-radius: 6px;
+            color: white !important;
+            text-decoration: none !important;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+    .btn-detail {
+        background: #2563eb;
+    }
+
+    .btn-edit {
+        background: #f59e0b;
+    }
+
+    .btn-delete {
+        background: #dc2626;
+    }
+
+    .empty-products {
+        text-align: center;
+        padding: 40px;
+        color: #64748b;
+    }
+
+    @@media (max-width: 992px) {
+        .product-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="products-page">
+
+    <div class="products-heading">
+        <h2>QUẢN LÝ SẢN PHẨM</h2>
+
+        <a href="@Url.Action("Create", "Products")"
+           class="add-product">
+            + Thêm sản phẩm
+        </a>
+    </div>
+
+    <div class="product-grid">
+
+        @foreach (var item in Model)
+        {
+            <div class="product-card">
+
+                @{
+                    var imageName = System.IO.Path.GetFileName(
+                        (item.ImageUrl ?? "").Replace('\\', '/')
+                    );
+
+                    var imagePath = string.IsNullOrWhiteSpace(imageName)
+                        ? ""
+                        : Url.Content("~/Content/images/" +
+                                      Uri.EscapeDataString(imageName));
+                }
+
+                @if (!string.IsNullOrEmpty(imagePath))
+                {
+                    <img src="@imagePath"
+                         alt="@item.ProductName"
+                         class="product-image" />
+                }
+                else
+                {
+                    <div class="product-image"
+                         style="display:flex;align-items:center;justify-content:center;">
+                        Chưa có ảnh
+                    </div>
+                }
+
+                <div class="product-info">
+
+                    <div class="product-category">
+                        @(item.Category != null
+                            ? item.Category.CategoryName
+                            : "Chưa phân loại")
+                    </div>
+
+                    <h3 class="product-name">
+                        @item.ProductName
+                    </h3>
+
+                    <p class="product-description">
+                        @item.Description
+                    </p>
+
+                    <div class="product-price">
+                        @String.Format("{0:N0} đ", item.Price)
+                    </div>
+
+                    <div class="product-stock">
+                        Số lượng tồn kho: @item.StockQuantity
+                    </div>
+
+                    @if (item.IsActive == true)
+                    {
+                        <span class="product-status status-active">
+                            Đang kinh doanh
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="product-status status-inactive">
+                            Ngừng kinh doanh
+                        </span>
+                    }
+
+                    <div class="product-actions">
+
+                        <a class="btn-detail"
+                           href="@Url.Action("Details", "Products", new { id = item.ProductID })">
+                            Chi tiết
+                        </a>
+
+                        <a class="btn-edit"
+                           href="@Url.Action("Edit", "Products", new { id = item.ProductID })">
+                            Chỉnh sửa
+                        </a>
+
+                        <a class="btn-delete"
+                           href="@Url.Action("Delete", "Products", new { id = item.ProductID })">
+                            Xóa
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-products">
+            Chưa có sản phẩm nào trong hệ thống.
+        </div>
+    }
+
+</div>

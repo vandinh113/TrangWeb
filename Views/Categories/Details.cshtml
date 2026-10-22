@@ -1,0 +1,80 @@
+﻿
+@model DBSportStore.Models.Category
+
+@{
+    ViewBag.Title = "Chi tiết danh mục";
+    Layout = "~/Views/Shared/_StoreLayout.cshtml";
+}
+
+<div class="container" style="padding-top:30px; padding-bottom:40px;">
+
+    <h2>CHI TIẾT DANH MỤC</h2>
+
+    <p>Thông tin chi tiết danh mục sản phẩm trong hệ thống SportStore.</p>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-7">
+
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+                    <strong>Thông tin danh mục</strong>
+                </div>
+
+                <div class="panel-body">
+
+                    <table class="table table-bordered table-striped">
+
+                        <tbody>
+                            <tr>
+                                <th style="width:35%;">
+                                    Mã danh mục
+                                </th>
+
+                                <td>
+                                    @Model.CategoryID
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Tên danh mục
+                                </th>
+
+                                <td>
+                                    @Model.CategoryName
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    <div style="margin-top:20px;">
+
+                        @Html.ActionLink(
+                            "Chỉnh sửa",
+                            "Edit",
+                            "Categories",
+                            new { id = Model.CategoryID },
+                            new { @class = "btn btn-warning" }
+                        )
+
+                        @Html.ActionLink(
+                            "Quay lại danh sách",
+                            "Index",
+                            "Categories",
+                            null,
+                            new { @class = "btn btn-default" }
+                        )
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

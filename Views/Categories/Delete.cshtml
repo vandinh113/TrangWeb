@@ -1,0 +1,91 @@
+﻿
+@model DBSportStore.Models.Category
+
+@{
+    ViewBag.Title = "Xóa danh mục";
+    Layout = "~/Views/Shared/_StoreLayout.cshtml";
+}
+
+<div class="container" style="padding-top:30px; padding-bottom:40px;">
+
+    <h2>XÓA DANH MỤC</h2>
+
+    <p>Quản lý danh mục sản phẩm trong hệ thống SportStore.</p>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-7">
+
+            <div class="panel panel-danger">
+
+                <div class="panel-heading">
+                    <strong>Xác nhận xóa danh mục</strong>
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="alert alert-warning">
+                        <strong>Cảnh báo!</strong>
+                        Bạn có chắc chắn muốn xóa danh mục này không?
+                        Hành động này không thể hoàn tác.
+                    </div>
+
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr>
+                                <th style="width:35%;">
+                                    Mã danh mục
+                                </th>
+                                <td>
+                                    @Model.CategoryID
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>
+                                    Tên danh mục
+                                </th>
+                                <td>
+                                    @Model.CategoryName
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    @using (Html.BeginForm(
+                        "Delete",
+                        "Categories",
+                        FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(
+                            model => model.CategoryID
+                        )
+
+                        <div style="margin-top:20px;">
+
+                            <button type="submit"
+                                    class="btn btn-danger">
+                                Xác nhận xóa
+                            </button>
+
+                            @Html.ActionLink(
+                                "Hủy và quay lại",
+                                "Index",
+                                "Categories",
+                                null,
+                                new { @class = "btn btn-default" }
+                            )
+
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

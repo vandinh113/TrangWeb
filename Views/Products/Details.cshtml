@@ -1,0 +1,325 @@
+﻿
+@model DBSportStore.Models.Product
+
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+    Layout = "~/Views/Shared/_StoreLayout.cshtml";
+
+    var imageName = System.IO.Path.GetFileName(
+        (Model.ImageUrl ?? "").Replace('\\', '/'));
+
+    var imagePath = string.IsNullOrWhiteSpace(imageName)
+        ? ""
+        : Url.Content("~/Content/images/" +
+            Uri.EscapeDataString(imageName));
+}
+
+<style>
+    .details-page {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        font-family: Arial, sans-serif;
+    }
+
+    .details-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+
+    .details-subtitle {
+        color: #64748b;
+        margin-bottom: 30px;
+    }
+
+    .details-content {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 35px;
+        align-items: start;
+    }
+
+    .details-image-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .details-image {
+        width: 100%;
+        height: 350px;
+        object-fit: contain;
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .details-no-image {
+        height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+    }
+
+    .details-category {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .details-product-name {
+        font-size: 27px;
+        font-weight: bold;
+        color: #0f172a;
+        margin-bottom: 20px;
+    }
+
+    .details-price {
+        color: #dc2626;
+        font-size: 30px;
+        font-weight: 800;
+        margin-bottom: 20px;
+    }
+
+    .details-description {
+        color: #475569;
+        line-height: 1.7;
+        margin-bottom: 25px;
+        white-space: pre-line;
+    }
+
+    .details-info {
+        border-top: 1px solid #e2e8f0;
+        padding-top: 20px;
+    }
+
+    .details-info-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .details-label {
+        font-weight: bold;
+        color: #334155;
+    }
+
+    .details-value {
+        color: #475569;
+        text-align: right;
+    }
+
+    .details-status {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .details-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
+    .details-btn {
+        display: inline-block;
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none !important;
+        text-align: center;
+    }
+
+    .details-btn-edit {
+        background: #f97316;
+        color: white !important;
+    }
+
+    .details-btn-back {
+        background: #e2e8f0;
+        color: #334155 !important;
+    }
+
+    @@media (max-width: 768px) {
+        .details-content {
+            grid-template-columns: 1fr;
+        }
+
+        .details-page {
+            margin: 15px;
+            padding: 20px;
+        }
+
+        .details-image {
+            height: 250px;
+        }
+    }
+</style>
+
+<div class="details-page">
+
+    <h2 class="details-title">
+        CHI TIẾT SẢN PHẨM
+    </h2>
+
+    <p class="details-subtitle">
+        Thông tin chi tiết sản phẩm trong hệ thống SportStore.
+    </p>
+
+    <div class="details-content">
+
+        <!-- HÌNH ẢNH SẢN PHẨM -->
+        <div class="details-image-box">
+
+            @if (!string.IsNullOrEmpty(imagePath))
+            {
+                <img src="@imagePath"
+                     alt="@Model.ProductName"
+                     class="details-image" />
+            }
+            else
+            {
+                <div class="details-no-image">
+                    Chưa có hình ảnh sản phẩm
+                </div>
+            }
+
+        </div>
+
+        <!-- THÔNG TIN SẢN PHẨM -->
+        <div>
+
+            <div class="details-category">
+                Danh mục:
+                @(Model.Category != null
+                    ? Model.Category.CategoryName
+                    : "Chưa phân loại")
+            </div>
+
+            <h3 class="details-product-name">
+                @Model.ProductName
+            </h3>
+
+            <div class="details-price">
+                @String.Format("{0:N0} đ", Model.Price)
+            </div>
+
+            <div class="details-description">
+                @Model.Description
+            </div>
+
+            <div class="details-info">
+
+                <div class="details-info-row">
+                    <span class="details-label">
+                        Mã sản phẩm
+                    </span>
+
+                    <span class="details-value">
+                        @Model.ProductID
+                    </span>
+                </div>
+
+                <div class="details-info-row">
+                    <span class="details-label">
+                        Danh mục
+                    </span>
+
+                    <span class="details-value">
+                        @(Model.Category != null
+                            ? Model.Category.CategoryName
+                            : "Chưa phân loại")
+                    </span>
+                </div>
+
+                <div class="details-info-row">
+                    <span class="details-label">
+                        Giá bán
+                    </span>
+
+                    <span class="details-value">
+                        @String.Format("{0:N0} đ", Model.Price)
+                    </span>
+                </div>
+
+                <div class="details-info-row">
+                    <span class="details-label">
+                        Số lượng tồn kho
+                    </span>
+
+                    <span class="details-value">
+                        @Model.StockQuantity
+                    </span>
+                </div>
+
+                <div class="details-info-row">
+                    <span class="details-label">
+                        Trạng thái
+                    </span>
+
+                    <span class="details-value">
+
+                        @if (Model.IsActive == true)
+                        {
+                            <span class="details-status status-active">
+                                Đang kinh doanh
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="details-status status-inactive">
+                                Ngừng kinh doanh
+                            </span>
+                        }
+
+                    </span>
+                </div>
+
+            </div>
+
+            <!-- NÚT CHỨC NĂNG -->
+            <div class="details-actions">
+
+                <a href="@Url.Action(
+                    "Edit",
+                    "Products",
+                    new { id = Model.ProductID })"
+                   class="details-btn details-btn-edit">
+                    Chỉnh sửa sản phẩm
+                </a>
+
+                <a href="@Url.Action("Index", "Products")"
+                   class="details-btn details-btn-back">
+                    Quay lại danh sách
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

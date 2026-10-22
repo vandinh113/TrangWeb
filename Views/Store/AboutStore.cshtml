@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Giới thiệu";
+    Layout = "~/Views/Shared/_StoreLayout.cshtml";
+}
+
+<div style="padding: 35px 0 50px;">
+
+    <div class="jumbotron text-center">
+        <h1>GIỚI THIỆU SPORTSTORE</h1>
+
+        <p>
+            Chào mừng bạn đến với SportStore -
+            website kinh doanh và quản lý
+            sản phẩm thể thao.
+        </p>
+
+        <p>
+            <a href="@Url.Action("Index", "Store")"
+               class="btn btn-primary btn-lg">
+                Khám phá sản phẩm
+            </a>
+        </p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <h3>Về SportStore</h3>
+
+            <p>
+                SportStore là website thương mại điện tử
+                được xây dựng bằng ASP.NET MVC 5,
+                Entity Framework 6 và SQL Server.
+            </p>
+
+            <p>
+                Website cung cấp các sản phẩm thể thao
+                như giày, trang phục, dụng cụ luyện tập
+                và phụ kiện thể thao.
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Chức năng của hệ thống</h3>
+
+            <ul>
+                <li>Hiển thị danh sách sản phẩm.</li>
+                <li>Xem thông tin chi tiết sản phẩm.</li>
+                <li>Thêm, sửa và xóa sản phẩm.</li>
+                <li>Upload hình ảnh sản phẩm.</li>
+                <li>Quản lý danh mục sản phẩm.</li>
+                <li>Lưu trữ dữ liệu bằng SQL Server.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <div class="text-center">
+
+        <h3>SPORTSTORE - NĂNG ĐỘNG MỖI NGÀY</h3>
+
+        <p>
+            Website thực hành môn lập trình web
+            ASP.NET MVC.
+        </p>
+
+        <a href="@Url.Action("Index", "Store")"
+           class="btn btn-success">
+            Về trang chủ
+        </a>
+
+    </div>
+
+</div>

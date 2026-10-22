@@ -1,0 +1,254 @@
+﻿
+@model DBSportStore.Models.Product
+
+@{
+    ViewBag.Title = "Xóa sản phẩm";
+    Layout = "~/Views/Shared/_StoreLayout.cshtml";
+
+    var imageName = System.IO.Path.GetFileName(
+        (Model.ImageUrl ?? "").Replace('\\', '/'));
+
+    var imagePath = string.IsNullOrWhiteSpace(imageName)
+        ? ""
+        : Url.Content("~/Content/images/" +
+            Uri.EscapeDataString(imageName));
+}
+
+<style>
+    .delete-page {
+        max-width: 850px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        font-family: Arial, sans-serif;
+    }
+
+    .delete-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #dc2626;
+        margin-bottom: 12px;
+    }
+
+    .delete-warning {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 18px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        line-height: 1.6;
+    }
+
+    .delete-product {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 25px;
+        align-items: start;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #f8fafc;
+    }
+
+    .delete-image {
+        width: 100%;
+        height: 230px;
+        object-fit: contain;
+        background: white;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .delete-no-image {
+        height: 230px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #94a3b8;
+        background: white;
+        border-radius: 10px;
+    }
+
+    .delete-name {
+        font-size: 23px;
+        font-weight: bold;
+        color: #0f172a;
+        margin-bottom: 15px;
+    }
+
+    .delete-price {
+        font-size: 25px;
+        font-weight: bold;
+        color: #dc2626;
+        margin-bottom: 15px;
+    }
+
+    .delete-info {
+        color: #475569;
+        line-height: 1.8;
+        margin-bottom: 8px;
+    }
+
+    .delete-description {
+        white-space: pre-line;
+        overflow-wrap: anywhere;
+    }
+
+    .delete-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
+    .btn-confirm-delete {
+        background: #dc2626;
+        color: white;
+        border: none;
+        padding: 13px 24px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .btn-confirm-delete:hover {
+            background: #b91c1c;
+        }
+
+    .btn-cancel-delete {
+        display: inline-block;
+        background: #e2e8f0;
+        color: #334155;
+        padding: 13px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .btn-cancel-delete:hover {
+            background: #cbd5e1;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 650px) {
+        .delete-page {
+            margin: 15px;
+            padding: 20px;
+        }
+
+        .delete-product {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="delete-page">
+
+    <h2 class="delete-title">
+        XÓA SẢN PHẨM
+    </h2>
+
+    <div class="delete-warning">
+        <strong>Cảnh báo!</strong>
+        Bạn có chắc chắn muốn xóa sản phẩm này không?
+        Sau khi xác nhận, sản phẩm sẽ bị xóa khỏi
+        cơ sở dữ liệu và không thể khôi phục trực tiếp
+        từ trang này.
+    </div>
+
+    <div class="delete-product">
+
+        <!-- HÌNH ẢNH SẢN PHẨM -->
+        <div>
+            @if (!string.IsNullOrEmpty(imagePath))
+            {
+                <img src="@imagePath"
+                     alt="@Model.ProductName"
+                     class="delete-image" />
+            }
+            else
+            {
+                <div class="delete-no-image">
+                    Chưa có hình ảnh
+                </div>
+            }
+        </div>
+
+        <!-- THÔNG TIN SẢN PHẨM -->
+        <div>
+
+            <h3 class="delete-name">
+                @Model.ProductName
+            </h3>
+
+            <div class="delete-price">
+                @String.Format("{0:N0} đ", Model.Price)
+            </div>
+
+            <div class="delete-info">
+                <strong>Mã sản phẩm:</strong>
+                @Model.ProductID
+            </div>
+
+            <div class="delete-info">
+                <strong>Danh mục:</strong>
+                @(Model.Category != null
+                    ? Model.Category.CategoryName
+                    : "Chưa phân loại")
+            </div>
+
+            <div class="delete-info">
+                <strong>Số lượng tồn kho:</strong>
+                @Model.StockQuantity
+            </div>
+
+            <div class="delete-info">
+                <strong>Trạng thái:</strong>
+
+                @if (Model.IsActive == true)
+                {
+                    <span>Đang kinh doanh</span>
+                }
+                else
+                {
+                    <span>Ngừng kinh doanh</span>
+                }
+            </div>
+
+            <div class="delete-info delete-description">
+                <strong>Mô tả:</strong>
+                @Model.Description
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- XÁC NHẬN XÓA -->
+    @using (Html.BeginForm("Delete", "Products", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(m => m.ProductID)
+
+        <div class="delete-actions">
+
+            <button type="submit"
+                    class="btn-confirm-delete"
+                    onclick="return confirm('Bạn chắc chắn muốn xóa sản phẩm này?');">
+                Xác nhận xóa
+            </button>
+
+            <a href="@Url.Action("Index", "Products")"
+               class="btn-cancel-delete">
+                Hủy bỏ
+            </a>
+
+        </div>
+    }
+
+</div>
